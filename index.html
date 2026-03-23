@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>happyhomie</title>
+    <link rel="icon" type="image/png" href="hh.png">
+    <style>
+        @font-face { font-family: 'MyArial'; src: url('arial.ttf') format('truetype'); }
+        * { font-family: 'MyArial', Arial, sans-serif; box-sizing: border-box; border: none !important; border-radius: 0 !important; outline: none; }
+        :root { --bg: #000000; --card: #141414; --accent: #ff4444; --text: #eee; --sub-text: #757575; --input-bg: #1d1d1d; }
+        
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            padding-bottom: 320px; 
+            font-size: 14px; 
+            color: var(--text); 
+            transition: filter 0.3s; 
+            background-color: var(--bg); 
+            overflow-x: hidden;
+        }
+
+        #fire-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 300px; 
+            background-image: url('160f147fcfec330c43627239828.gif');
+            background-repeat: repeat-x;
+            background-size: auto 100%; 
+            animation: fireScroll 50s linear infinite; 
+            z-index: 0; 
+            pointer-events: none; 
+            filter: brightness(0.5); 
+        }
+        
+        @keyframes fireScroll {
+            from { background-position: 0 0; }
+            to { background-position: -2000px 0; }
+        }
+
+        a { color: var(--accent) !important; text-decoration: none !important; cursor: pointer !important; word-break: break-all; }
+        a:hover { text-decoration: underline !important; color: #fff !important; }
+
+        header { background-color: var(--card); padding: 20px; text-align: center; margin-bottom: 20px; position: relative; z-index: 1; }
+        h1 { margin: 0; font-size: 28px; color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .update-text { font-size: 10px; color: var(--sub-text); display: block; margin-top: 5px; }
+        .banner-img { max-width: 100%; height: auto; display: block; margin: 10px auto 5px; }
+        
+        .form-container { background-color: var(--card); max-width: 500px; margin: 0 auto 40px; padding: 20px; position: relative; z-index: 1; }
+        .profile-setup { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: #000; padding: 10px; }
+        .avatar-preview { width: 40px; height: 40px; background: #222; border: 1px solid var(--accent) !important; object-fit: cover; }
+        .btn-avatar { font-size: 9px; color: var(--accent); cursor: pointer; text-decoration: underline; }
+        .id-badge-container { margin-left: auto; display: flex; align-items: center; gap: 5px; }
+        .user-id-display { font-size: 10px; color: var(--sub-text); }
+        .badge-icon { width: 16px; height: 16px; object-fit: contain; }
+        
+        .user-input-wrapper { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+        input[type="text"] { flex: 1; padding: 12px; background-color: var(--input-bg); color: var(--text); }
+        .reset-icon { width: 30px; height: 30px; cursor: pointer; object-fit: contain; }
+        textarea { width: 100%; margin-bottom: 10px; padding: 12px; background-color: var(--input-bg); color: var(--text); resize: none; }
+        
+        .custom-file-upload { display: block; width: 100%; padding: 10px; background: var(--input-bg); color: var(--sub-text); font-size: 11px; text-align: center; cursor: pointer; margin-bottom: 10px; text-transform: uppercase; border: 1px solid #333 !important; }
+        #mediaInput { display: none; }
+        #preview-container { display: none; width: 100%; background-color: var(--input-bg); margin-bottom: 10px; padding: 10px; text-align: center; border: 1px dashed var(--sub-text) !important; }
+        #preview-media { max-width: 100%; max-height: 150px; }
+        
+        .post-actions { display: flex; gap: 5px; }
+        .btn-post { background-color: var(--accent); color: white; cursor: pointer; padding: 15px; flex: 2; font-weight: bold; text-transform: uppercase; }
+        .btn-cancel { background-color: #333; color: white; cursor: pointer; padding: 15px; flex: 1; font-weight: bold; text-transform: uppercase; display: none; }
+        
+        #progress-wrapper { display: none; margin-bottom: 10px; }
+        #progress-bar-container { width: 100%; height: 6px; background: #222; overflow: hidden; position: relative; }
+        #progress-bar { width: 0%; height: 100%; background: var(--accent); transition: width 0.2s; }
+        #progress-text { font-size: 10px; color: var(--accent); text-align: right; display: block; margin-bottom: 2px; font-weight: bold; }
+
+        .feed { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 1; }
+        .post { background-color: var(--card); padding: 20px; border-left: 4px solid var(--accent) !important; animation: fadeIn 0.3s ease; position: relative; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .post-header { font-size: 11px; color: var(--sub-text); margin-bottom: 8px; border-bottom: 1px solid #222 !important; padding-bottom: 5px; display: flex; align-items: center; }
+        .post-avatar { width: 32px; height: 32px; object-fit: cover; margin-right: 10px; border: 1px solid #333 !important; background: #000; }
+        .post-user { font-weight: bold; margin-right: 4px; font-size: 13px; color: #4caf50; }
+        
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: transparent; color: #ff4444; border: none !important; cursor: pointer; font-weight: bold; font-size: 14px; opacity: 0.6; }
+        .delete-btn:hover { opacity: 1; color: #fff; }
+
+        .cmd-big { font-size: 24px; font-weight: bold; color: #fff; display: inline-block; }
+        .cmd-mini { font-size: 10px; color: #888; display: inline-block; }
+        .cmd-spoiler { background: #333; color: #333; cursor: help; border-radius: 2px !important; }
+        .cmd-spoiler:hover { background: transparent; color: inherit; }
+        .wave-char { display: inline-block; animation: waveAnim 1.2s infinite ease-in-out; }
+        @keyframes waveAnim { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .shake-char { display: inline-block; animation: shakeAnim 0.1s infinite; }
+        @keyframes shakeAnim { 0%, 100% { transform: translate(0,0); } 25% { transform: translate(1px,1px); } 50% { transform: translate(-1px,1px); } 75% { transform: translate(1px,-1px); } }
+
+        .yt-iframe, .native-player { width: 100%; aspect-ratio: 16 / 9; max-width: 500px; border: 1px solid #333 !important; margin-top: 10px; display: block; background: #000; }
+        .native-player-audio { width: 100%; max-width: 500px; margin-top: 10px; display: block; height: 40px; }
+        .post-text { font-size: 15px; white-space: pre-wrap; word-break: break-word; padding-left: 42px; }
+        .media-content { display: block; margin-top: 15px; background-color: #000; border: 1px solid #222 !important; max-width: 90%; margin: 15px auto 0; max-height: 400px; width: auto; }
+    </style>
+</head>
+<body>
+<div id="fire-footer"></div>
+
+<header>
+    <h1>STEAMHAPPYFORO</h1>
+    <span class="update-text">(update 22.03.2026)</span>
+    <img src="banner.gif" class="banner-img">
+    <a href="https://docs.google.com/document/d/1G0KaXr18qCbBGBw_e8XGBc1oBkDj4vebNkJur_z9Glo/edit?usp=sharing" target="_blank" style="color:var(--accent); font-size:10px; text-decoration:none;">Guide to Using Chat Properly</a>
+</header>
+
+<div class="form-container">
+    <div class="profile-setup">
+        <img src="" id="avatarPreview" class="avatar-preview">
+        <div>
+            <label class="btn-avatar" for="avatarInput">UPLOAD AVATAR (NO GIF)</label>
+            <input type="file" id="avatarInput" accept="image/png, image/jpeg" style="display:none">
+        </div>
+        <div class="id-badge-container">
+            <img src="user.png" id="myBadge" class="badge-icon">
+            <span class="user-id-display" id="myIdDisplay">ID: #?</span>
+        </div>
+    </div>
+    <div class="user-input-wrapper">
+        <input type="text" id="user" placeholder="Username" maxlength="20">
+        <img src="back.png" class="reset-icon" id="randomUserBtn">
+    </div>
+    <textarea id="content" rows="3" placeholder="write you awesome msg!" maxlength="500"></textarea>
+    
+    <div id="progress-wrapper">
+        <span id="progress-text">0%</span>
+        <div id="progress-bar-container"><div id="progress-bar"></div></div>
+    </div>
+
+    <label for="mediaInput" class="custom-file-upload" id="fileLabel">UPLOAD FILE</label>
+    <input type="file" id="mediaInput" accept="image/*">
+    <div id="preview-container"><img id="preview-media" src=""></div>
+
+    <div class="post-actions">
+        <button class="btn-post" id="postBtn">POST</button>
+        <button class="btn-cancel" id="cancelBtn">CANCEL</button>
+    </div>
+</div>
+
+<div id="feed" class="feed"> </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, push, set, get, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    
+    const firebaseConfig = { databaseURL: "https://happyapi-c56c4-default-rtdb.firebaseio.com/" };
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const postsRef = ref(db, 'posts');
+    const statsRef = ref(db, 'stats/userCount');
+
+    const feed = document.getElementById('feed'), userI = document.getElementById('user'), 
+          contentI = document.getElementById('content'), fileI = document.getElementById('mediaInput'), 
+          btn = document.getElementById('postBtn'), cancelBtn = document.getElementById('cancelBtn'),
+          myIdDisplay = document.getElementById('myIdDisplay'), myBadge = document.getElementById('myBadge'), 
+          avatarInput = document.getElementById('avatarInput'), avatarPreview = document.getElementById('avatarPreview'),
+          fileLabel = document.getElementById('fileLabel'), randomUserBtn = document.getElementById('randomUserBtn'),
+          progWrap = document.getElementById('progress-wrapper'), progBar = document.getElementById('progress-bar'),
+          progText = document.getElementById('progress-text');
+
+    let isUploading = false, myAssignedId = localStorage.getItem('sh_user_id'), 
+        mySavedAvatar = localStorage.getItem('sh_user_avatar') || '';
+
+    userI.value = localStorage.getItem('sh_user_name') || '';
+    if(mySavedAvatar) avatarPreview.src = mySavedAvatar;
+
+    window.deletePost = (postId) => {
+        if (confirm("DELETE THIS POST?")) {
+            remove(ref(db, `posts/${postId}`));
+        }
+    };
+
+    function getBadge(userId) {
+        if (userId == "0" || userId == "47") return "awesome.png";
+        if (userId == "1") return "wenda.png";
+        if (userId == "2" || userId == "36") return "hh.png";
+        return "user.png";
+    }
+
+    async function initUserId() {
+        if (myAssignedId === null) {
+            const snapshot = await get(statsRef);
+            let currentCount = snapshot.exists() ? snapshot.val() : -1;
+            myAssignedId = currentCount + 1;
+            await set(statsRef, myAssignedId);
+            localStorage.setItem('sh_user_id', myAssignedId);
+        }
+        myIdDisplay.innerText = (myAssignedId == "47") ? "ID: #-2009" : `ID: #${myAssignedId}`;
+        myBadge.src = getBadge(myAssignedId);
+    }
+    initUserId();
+
+    async function getCleanText(text) {
+        if(!text) return "";
+        const myBlacklist = ["ngga", "niga", "nigga", "nigger", "niggers", "niglet", "nigr", "nigg", "retard", "retarded", "rtard", "xvideos", "pornhub", "xnxx", "porno"];
+        try {
+            const url = `https://www.purgomalum.com/service/json?text=${encodeURIComponent(text)}&add=${myBlacklist.join(',')}&fill_char=%E2%96%88`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.result; 
+        } catch (error) {
+            let localClean = text;
+            myBlacklist.forEach(word => {
+                const regex = new RegExp(word, "gi");
+                localClean = localClean.replace(regex, "████");
+            });
+            return localClean;
+        }
+    }
+
+    function processTextEffects(text) {
+        return text.replace(/([#/*&!]{1,2})(.*?)\1/g, (match, cmd, content) => {
+            let res = content;
+            if (cmd.includes('&') || cmd.includes('!')) {
+                let temp = "";
+                for (let i = 0; i < content.length; i++) {
+                    let char = content[i] === " " ? "&nbsp;" : content[i];
+                    let classes = "";
+                    if (cmd.includes('&')) classes += "wave-char ";
+                    if (cmd.includes('!')) classes += "shake-char ";
+                    temp += `<span class="${classes}" style="animation-delay:${i*0.08}s">${char}</span>`;
+                }
+                res = temp;
+            }
+            if (cmd.includes('#')) res = `<span class="cmd-big">${res}</span>`;
+            if (cmd.includes('*')) res = `<span class="cmd-mini">${res}</span>`;
+            if (cmd.includes('/')) res = `<span class="cmd-spoiler">${res}</span>`;
+            return res;
+        });
+    }
+
+    function parseContent(text) {
+        if(!text) return "";
+        let res = text.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+        const savedLinks = [];
+        res = res.replace(urlRegex, (match) => {
+            const id = `__LNK${savedLinks.length}__`;
+            savedLinks.push(match);
+            return id;
+        });
+        if (/^[#/*&!]+/.test(res) && !/([#/*&!]{1,2}).*?\1/.test(res)) {
+            let symbols = res.match(/^[#/*&!]+/)[0];
+            res = symbols + res.substring(symbols.length) + symbols;
+        }
+        res = processTextEffects(res);
+        let players = "";
+        savedLinks.forEach((link, index) => {
+            const placeholder = `__LNK${index}__`;
+            const ytMatch = link.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^\s&]+)/);
+            const catboxMatch = link.match(/\.(mp4|webm|mp3|wav|ogg)/i);
+            if (ytMatch) {
+                players += `<br><iframe class="yt-iframe" src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allowfullscreen></iframe>`;
+            } else if (catboxMatch) {
+                const ext = catboxMatch[1].toLowerCase();
+                if (ext === 'mp4' || ext === 'webm') {
+                    players += `<br><video class="native-player" controls><source src="${link}" type="video/${ext}"></video>`;
+                } else {
+                    players += `<br><audio class="native-player-audio" controls><source src="${link}" type="audio/${ext === 'mp3' ? 'mpeg' : ext}"></audio>`;
+                }
+            }
+            res = res.replace(placeholder, `<a href="${link}" target="_blank">${link}</a>`);
+        });
+        return res + players;
+    }
+
+    onValue(postsRef, (snapshot) => {
+        const data = snapshot.val(); 
+        feed.innerHTML = '';
+        if (!data) return;
+
+        const sorted = Object.keys(data)
+            .map(k => ({...data[k], id: k}))
+            .sort((a,b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+        
+        sorted.forEach(p => {
+            let pfp = p.av ? `<img src="${p.av}" class="post-avatar">` : `<div class="post-avatar"></div>`;
+            let mediaHtml = p.file ? `<a href="${p.file}" target="_blank"><img src="${p.file}" class="media-content"></a>` : '';
+            let delBtn = (myAssignedId == "0" || myAssignedId == "1") ? `<button class="delete-btn" onclick="deletePost('${p.id}')">X</button>` : '';
+            let displayId = (p.userId == "47") ? "-2009" : p.userId;
+            
+            feed.innerHTML += `
+                <div class="post">
+                    ${delBtn}
+                    <div class="post-header">
+                        ${pfp}
+                        <span class="post-user">${p.u}</span>
+                        <span class="post-id">#${displayId}</span>
+                        <img src="${getBadge(p.userId)}" class="badge-icon">
+                        <span style="margin-left:auto;">${p.d}</span>
+                    </div>
+                    <div class="post-text">${parseContent(p.c)}</div>
+                    ${mediaHtml}
+                </div>`;
+        });
+    });
+
+    async function processImage(file, size = 300) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif')) {
+                    return resolve(e.target.result);
+                }
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let w = img.width, h = img.height;
+                    if (w > h && w > size) { h *= size / w; w = size; } else if (h > size) { w *= size / h; h = size; }
+                    canvas.width = w; canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    resolve(canvas.toDataURL('image/jpeg', 0.1)); 
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    avatarInput.onchange = async (e) => {
+        const file = e.target.files[0];
+        if(!file) return;
+        if (file.type === "image/gif" || file.name.toLowerCase().endsWith('.gif')) {
+            alert("GIFS ARE NOT ALLOWED AS PROFILE PICTURES!");
+            e.target.value = "";
+            return;
+        }
+        const base64 = await processImage(file, 50);
+        mySavedAvatar = base64;
+        avatarPreview.src = base64;
+        localStorage.setItem('sh_user_avatar', base64);
+    };
+
+    fileI.onchange = () => {
+        if (fileI.files[0]) {
+            fileLabel.innerText = fileI.files[0].name;
+            document.getElementById('preview-container').style.display = 'block';
+            const reader = new FileReader();
+            reader.onload = (e) => document.getElementById('preview-media').src = e.target.result;
+            reader.readAsDataURL(fileI.files[0]);
+        }
+    };
+
+    const updateProgress = (val) => {
+        progBar.style.width = val + '%';
+        progText.innerText = val + '%';
+    };
+
+    btn.onclick = async () => {
+        const file = fileI.files[0], u = userI.value.trim() || 'Anonymous', c = contentI.value.trim();
+        if (c.includes('#') && c.includes('*')) { alert("CANNOT USE # AND * AT THE SAME TIME!"); return; }
+        if (!c && !file) return;
+        
+        isUploading = true;
+        btn.disabled = true; cancelBtn.style.display = 'block'; progWrap.style.display = 'block';
+        updateProgress(10);
+
+        const cleanContent = await getCleanText(c);
+        updateProgress(40);
+
+        const fileData = file ? await processImage(file) : null;
+        if(!isUploading) return;
+        updateProgress(70);
+
+        const now = new Date();
+        localStorage.setItem('sh_user_name', u);
+
+        await set(push(postsRef), { 
+            u, 
+            c: cleanContent, 
+            file: fileData, 
+            userId: myAssignedId, 
+            av: mySavedAvatar, 
+            d: now.toLocaleString(), 
+            timestamp: now.toISOString()
+        });
+
+        updateProgress(100);
+        setTimeout(() => {
+            contentI.value = ''; fileI.value = '';
+            fileLabel.innerText = "UPLOAD FILE";
+            document.getElementById('preview-container').style.display = 'none';
+            progWrap.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            btn.disabled = false;
+            updateProgress(0);
+            isUploading = false;
+        }, 500);
+    };
+
+    cancelBtn.onclick = () => {
+        isUploading = false;
+        location.reload();
+    };
+
+    randomUserBtn.onclick = () => {
+        const name = "User" + Math.floor(Math.random() * 9999);
+        userI.value = name;
+        localStorage.setItem('sh_user_name', name);
+    };
+</script>
+</body>
+</html>
